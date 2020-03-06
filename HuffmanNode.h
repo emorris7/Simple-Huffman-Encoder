@@ -31,6 +31,10 @@ public:
     //move assignment 
     HuffmanNode& operator=(HuffmanNode&& other);
 
+    void setLeftNode(const std::shared_ptr<HuffmanNode>& leftNode);
+
+    void setRightNode(const std::shared_ptr<HuffmanNode>& RightNode);
+
 };
 } // namespace MRREMI007
 
