@@ -12,6 +12,7 @@ class HuffmanTree
 {
 private:
     std::shared_ptr<HuffmanNode> root;
+    std::unordered_map<char, std::string> codeTable;
 
 public:
     HuffmanTree();
@@ -30,6 +31,12 @@ public:
     //move assignment
     HuffmanTree &operator=(HuffmanTree &&other);
 
+    //make a frequency map for the given file
+    std::unordered_map<char, int> mapFrequency(std::string fileName);
+
+    //build a huff man tree from the given file
+    void buildFromFile(std::string fileName);
+
     //build tree from the given unordered map
     void build(std::unordered_map<char, int> charFrequency);
 
@@ -44,7 +51,9 @@ public:
     //create a priority queue for the given unordered map
     std::priority_queue<HuffmanNode, std::vector<HuffmanNode>, compare> prioritise(std::unordered_map<char, int> &charFrequency);
 
-    //encode given char (create table)
+    //moke code table for the given Huffman tree
+    void makeCodeTable();
+
 };
 
 } // namespace MRREMI007
