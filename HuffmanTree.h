@@ -11,10 +11,11 @@ namespace MRREMI007
 class HuffmanTree
 {
 private:
+public:
+    //maybe should make private
     std::shared_ptr<HuffmanNode> root;
     std::unordered_map<char, std::string> codeTable;
 
-public:
     HuffmanTree();
 
     ~HuffmanTree();
@@ -54,6 +55,8 @@ public:
     //moke code table for the given Huffman tree
     void makeCodeTable();
 
+    //moke code table for the given Huffman tree
+    void makeCodeTableRec(std::shared_ptr<HuffmanNode> node, std::string str);
 };
 
 } // namespace MRREMI007

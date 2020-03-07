@@ -106,6 +106,28 @@ void MRREMI007::HuffmanTree::build(std::unordered_map<char, int> charFrequency)
 //moke code table for the given Huffman tree
 void MRREMI007::HuffmanTree::makeCodeTable()
 {
+    if (root != nullptr){
+        makeCodeTableRec(root, "");
+    }
+    else{
+        std::cout << "Cannot make code table, Huffman Tree is empty" << std::endl;
+    }
+}
+
+//based off https://www.techiedelight.com/huffman-coding/
+void MRREMI007::HuffmanTree::makeCodeTableRec(std::shared_ptr<MRREMI007::HuffmanNode> node, std::string str){
+    //base case
+    if (node == nullptr){
+        return;
+    }
+    
+    if (node->leftNode == nullptr && node->rightNode == nullptr){
+        codeTable.insert({node->character, str});
+        return;
+    }
+    
+    makeCodeTableRec(node->leftNode, str + "0");
+    makeCodeTableRec(node->rightNode, str + "1");
 }
 
 //create a priority queue for the given unordered map
