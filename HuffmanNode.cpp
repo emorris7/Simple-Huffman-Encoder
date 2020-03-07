@@ -61,3 +61,7 @@ MRREMI007::HuffmanNode &MRREMI007::HuffmanNode::operator=(MRREMI007::HuffmanNode
     }
     return *this;
 }
+
+bool MRREMI007::HuffmanNode::operator<(const MRREMI007::HuffmanNode& other){
+    return occurence < other.occurence;
+}

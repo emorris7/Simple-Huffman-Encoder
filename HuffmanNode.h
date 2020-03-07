@@ -35,7 +35,9 @@ public:
 
     void setRightNode(const std::shared_ptr<HuffmanNode>& RightNode);
 
+    bool operator<(const HuffmanNode& other);
 };
+
 } // namespace MRREMI007
 
 #endif
