@@ -1,6 +1,6 @@
 #include "HuffmanNode.h"
 
-MRREMI007::HuffmanNode::HuffmanNode(const int o, const char c)
+MRREMI007::HuffmanNode::HuffmanNode(const char c, const int o)
 {
     occurence = o;
     character = c;
@@ -62,6 +62,7 @@ MRREMI007::HuffmanNode &MRREMI007::HuffmanNode::operator=(MRREMI007::HuffmanNode
     return *this;
 }
 
-bool MRREMI007::HuffmanNode::operator<(const MRREMI007::HuffmanNode& other){
-    return occurence < other.occurence;
+bool MRREMI007::operator>(const MRREMI007::HuffmanNode &lhs, const MRREMI007::HuffmanNode &rhs)
+{
+    return lhs.occurence > rhs.occurence;
 }
