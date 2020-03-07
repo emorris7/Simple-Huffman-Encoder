@@ -30,12 +30,8 @@ public:
     //move assignment
     HuffmanTree &operator=(HuffmanTree &&other);
 
-    //insert node in tree, not const as want to can left and right pointers
-    HuffmanTree &insert(HuffmanTree &node);
-
     //build tree from the given unordered map
     void build(std::unordered_map<char, int> charFrequency);
-
 
     struct compare
     {
