@@ -59,10 +59,13 @@ public:
     void makeCodeTableRec(std::shared_ptr<HuffmanNode> node, std::string str);
 
     //write code table to a file
-    void writeCodeTable(std::string fileName);
+    void writeCodeTable(std::string fileName, long fields);
 
     //compress the given file and write compressed data to the given output file;
-    void compressFile(std::string inputFileName, std::string outputFileName);
+    void compressFile(const std::string inputFileName, const std::string outputFileName);
+
+    //creates a compressed binary file
+    void compressFileBinary(const std::string inputFileName, const std::string outputFileName);
 };
 
 } // namespace MRREMI007
