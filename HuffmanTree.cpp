@@ -103,33 +103,6 @@ void MRREMI007::HuffmanTree::build(std::unordered_map<char, int> charFrequency)
     root = std::make_shared<HuffmanNode>(prio.top());
 }
 
-//moke code table for the given Huffman tree
-void MRREMI007::HuffmanTree::makeCodeTable()
-{
-    if (root != nullptr){
-        makeCodeTableRec(root, "");
-    }
-    else{
-        std::cout << "Cannot make code table, Huffman Tree is empty" << std::endl;
-    }
-}
-
-//based off https://www.techiedelight.com/huffman-coding/
-void MRREMI007::HuffmanTree::makeCodeTableRec(std::shared_ptr<MRREMI007::HuffmanNode> node, std::string str){
-    //base case
-    if (node == nullptr){
-        return;
-    }
-    
-    if (node->leftNode == nullptr && node->rightNode == nullptr){
-        codeTable.insert({node->character, str});
-        return;
-    }
-    
-    makeCodeTableRec(node->leftNode, str + "0");
-    makeCodeTableRec(node->rightNode, str + "1");
-}
-
 //create a priority queue for the given unordered map
 std::priority_queue<MRREMI007::HuffmanNode, std::vector<MRREMI007::HuffmanNode>, MRREMI007::HuffmanTree::compare> MRREMI007::HuffmanTree::prioritise(std::unordered_map<char, int> &charFrequency)
 {
@@ -140,4 +113,93 @@ std::priority_queue<MRREMI007::HuffmanNode, std::vector<MRREMI007::HuffmanNode>,
         pri.push(node);
     }
     return pri;
+}
+
+//moke code table for the given Huffman tree
+void MRREMI007::HuffmanTree::makeCodeTable()
+{
+    if (root != nullptr)
+    {
+        makeCodeTableRec(root, "");
+    }
+    else
+    {
+        std::cout << "Cannot make code table, Huffman Tree is empty" << std::endl;
+    }
+}
+
+//based off https://www.techiedelight.com/huffman-coding/
+void MRREMI007::HuffmanTree::makeCodeTableRec(std::shared_ptr<MRREMI007::HuffmanNode> node, std::string str)
+{
+    //base case
+    if (node == nullptr)
+    {
+        return;
+    }
+
+    if (node->leftNode == nullptr && node->rightNode == nullptr)
+    {
+        codeTable.insert({node->character, str});
+        return;
+    }
+
+    makeCodeTableRec(node->leftNode, str + "0");
+    makeCodeTableRec(node->rightNode, str + "1");
+}
+
+//write code table to a file
+void MRREMI007::HuffmanTree::writeCodeTable(std::string fileName)
+{
+    if (codeTable.size() == 0)
+    {
+        std::cout << "Code table is empty, cannot create code table" << std::endl;
+        return;
+    }
+    std::ofstream outputFile(fileName + ".hdr");
+    if (outputFile.is_open())
+    {
+        outputFile << codeTable.size() << "\n";
+        for (auto &e : codeTable)
+        {
+            outputFile << e.first << " " << e.second << "\n";
+        }
+        outputFile.close();
+    }
+    else
+    {
+        std::cout << "Could not open header file" << std::endl;
+    }
+}
+
+//compress the given file and write compressed data to the given output file;
+void MRREMI007::HuffmanTree::compressFile(std::string inputFileName, std::string outputFileName)
+{
+    buildFromFile(inputFileName);
+    makeCodeTable();
+    if (codeTable.size() == 0)
+    {
+        return;
+    }
+    std::ifstream inputFile(inputFileName);
+    std::ofstream outputFile(outputFileName);
+
+    if (inputFile.is_open() && outputFile.is_open())
+    {
+        writeCodeTable(outputFileName);
+        char readIn;
+        std::string output{};
+        while (inputFile.get(readIn))
+        {
+            std::string str = codeTable[readIn];
+            output += str;
+        }
+        outputFile << output;
+
+        inputFile.close();
+        outputFile.close();
+    }
+    else
+    {
+        std::cout << "Could not open file for compression" << std::endl;
+    }
 }

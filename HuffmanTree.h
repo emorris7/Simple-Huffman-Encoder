@@ -57,6 +57,12 @@ public:
 
     //moke code table for the given Huffman tree
     void makeCodeTableRec(std::shared_ptr<HuffmanNode> node, std::string str);
+
+    //write code table to a file
+    void writeCodeTable(std::string fileName);
+
+    //compress the given file and write compressed data to the given output file;
+    void compressFile(std::string inputFileName, std::string outputFileName);
 };
 
 } // namespace MRREMI007
