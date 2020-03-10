@@ -149,7 +149,7 @@ void MRREMI007::HuffmanTree::makeCodeTableRec(std::shared_ptr<MRREMI007::Huffman
 }
 
 //write code table to a file, (numbers of fields is number of bytes in file?)
-void MRREMI007::HuffmanTree::writeCodeTable(std::string fileName, long fields)
+void MRREMI007::HuffmanTree::writeCodeTable(std::string fileName)
 {
     //check if there is actually anything in the code table
     if (codeTable.size() == 0)
@@ -160,7 +160,7 @@ void MRREMI007::HuffmanTree::writeCodeTable(std::string fileName, long fields)
     std::ofstream outputFile(fileName + ".hdr");
     if (outputFile.is_open())
     {
-        outputFile << fields << "\n";
+        outputFile << codeTable.size() << "\n";
         int counter{1};
         for (auto &e : codeTable)
         {
@@ -207,7 +207,7 @@ void MRREMI007::HuffmanTree::compressFile(const std::string inputFileName, const
             bitCounter += str.length();
             output += str;
         }
-        writeCodeTable(outputFileName, byteCounter);
+        writeCodeTable(outputFileName);
         //calculate padding
         long offSet = (bitCounter / 8) + (bitCounter % 8 ? 1 : 0);
         //pad string with zero's for extra bytes
@@ -254,7 +254,7 @@ void MRREMI007::HuffmanTree::compressFileBinary(const std::string inputFileName,
             bitCounter += str.length();
             output += str;
         }
-        writeCodeTable(outputFileName, byteCounter);
+        writeCodeTable(outputFileName);
         //calculate padding
         long offSet = (bitCounter / 8) + (bitCounter % 8 ? 1 : 0);
         //pad string with zero's for extra bytes
@@ -263,6 +263,7 @@ void MRREMI007::HuffmanTree::compressFileBinary(const std::string inputFileName,
             output += "0";
         }
         //extract cstring
+        std::cout << output << std::endl;
         const char *cstring = output.c_str();
         //convert to bits and write to file
 
@@ -272,16 +273,19 @@ void MRREMI007::HuffmanTree::compressFileBinary(const std::string inputFileName,
             unsigned char check{0};
             for (int j = 0; j < 8; j++)
             {
-                // if (cstring[i + j] == 1)
+                // if (cstring[i + j] == '1')
                 // {
                 //     val |= 1;
+                //     std::cout << "not shift " << std::to_string(val) << std::endl;
                 // }
                 // if (j < 7)
                 // {
                 //     val <<= 1;
+                //     std::cout << std::to_string(val) << std::endl;
                 // }
-                check = check | (cstring[i+j] << (7 - j));
-                
+
+                // std::cout << "char " << j << " " << std::to_string(cstring[i + j]) << std::endl;
+                check |= (((int)cstring[i + j] - 48) << (7 - j)); //minus 48 to get actual int value (1/0)
             }
             // outputFile << val;
             outputFile << check;
@@ -297,5 +301,31 @@ void MRREMI007::HuffmanTree::compressFileBinary(const std::string inputFileName,
     else
     {
         std::cout << "Could not open file for compression" << std::endl;
+    }
+}
+
+//extract compressed data to its encoded string representation
+void MRREMI007::HuffmanTree::decompressFileBinary(const std::string inputFileName)
+{
+    std::FILE *input = fopen(inputFileName.c_str(), "r");
+    if (input != nullptr)
+    {
+        unsigned char *c = new unsigned char[1];
+        std::string encoding{};
+        while (fread(c, 1, 1, input))
+        {
+            for (int i = 7; i > -1; --i)
+            {
+                char check = *c >> i;
+                int val = check & 1;
+                encoding += std::to_string(val);
+            }
+        }
+        fclose(input);
+        std::cout << encoding << std::endl;
+    }
+    else
+    {
+        std::cout << "Unable to open binary file for decompression" << std::endl;
     }
 }
