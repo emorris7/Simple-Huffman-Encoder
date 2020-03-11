@@ -322,6 +322,7 @@ void MRREMI007::HuffmanTree::decompressFileBinary(const std::string inputFileNam
             }
         }
         fclose(input);
+        delete[] c;
         std::cout << encoding << std::endl;
     }
     else
