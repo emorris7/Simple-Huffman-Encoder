@@ -148,7 +148,7 @@ void MRREMI007::HuffmanTree::makeCodeTableRec(std::shared_ptr<MRREMI007::Huffman
     makeCodeTableRec(node->rightNode, str + "1");
 }
 
-//write code table to a file, (numbers of fields is number of bytes in file?)
+//write code table to a file
 void MRREMI007::HuffmanTree::writeCodeTable(std::string fileName)
 {
     //check if there is actually anything in the code table
@@ -187,42 +187,46 @@ void MRREMI007::HuffmanTree::compressFile(const std::string inputFileName, const
 {
     buildFromFile(inputFileName);
     makeCodeTable();
-    if (codeTable.size() == 0)
+    if (codeTable.size() == 0 && root == nullptr)
     {
-        return;
+        std::cout << "Compressing empty or non-existant file" << std::endl;
     }
     std::ifstream inputFile(inputFileName);
-    std::ofstream outputFile(outputFileName);
 
-    if (inputFile.is_open() && outputFile.is_open())
+    if (inputFile.is_open())
     {
-        char readIn;
-        std::string output{};
-        long byteCounter{};
-        long bitCounter{};
-        while (inputFile.get(readIn))
-        {
-            std::string str = codeTable[readIn];
-            byteCounter++;
-            bitCounter += str.length();
-            output += str;
-        }
-        writeCodeTable(outputFileName);
-        //calculate padding
-        long offSet = (bitCounter / 8) + (bitCounter % 8 ? 1 : 0);
-        //pad string with zero's for extra bytes
-        for (int i = bitCounter; i < offSet * 8; i++)
-        {
-            output += "0";
-        }
-        outputFile << output;
+        std::ofstream outputFile(outputFileName);
 
-        //calculate compression ratio and print
-        int ratio = (byteCounter * 8) / bitCounter;
-        std::cout << "Compression ratio is roughly 1:" << ratio << std::endl;
+        if (outputFile.is_open())
+        {
+            char readIn;
+            std::string output{};
+            long byteCounter{};
+            long bitCounter{};
+            while (inputFile.get(readIn))
+            {
+                std::string str = codeTable[readIn];
+                byteCounter++;
+                bitCounter += str.length();
+                output += str;
+            }
+            writeCodeTable(outputFileName);
+            // //calculate padding
+            // long offSet = (bitCounter / 8) + (bitCounter % 8 ? 1 : 0);
+            // //pad string with zero's for extra bytes
+            // for (int i = bitCounter; i < offSet * 8; i++)
+            // {
+            //     output += "0";
+            // }
+            outputFile << output;
 
+            //calculate compression ratio and print
+            int ratio = (byteCounter * 8) / bitCounter;
+            std::cout << "Compression ratio is roughly 1:" << ratio << std::endl;
+
+            outputFile.close();
+        }
         inputFile.close();
-        outputFile.close();
     }
     else
     {
@@ -234,69 +238,72 @@ void MRREMI007::HuffmanTree::compressFileBinary(const std::string inputFileName,
 {
     buildFromFile(inputFileName);
     makeCodeTable();
-    if (codeTable.size() == 0)
+    if (codeTable.size() == 0 && root == nullptr)
     {
-        return;
+        std::cout << "Compressing empyt file" << std::endl;
     }
     std::ifstream inputFile(inputFileName);
-    std::ofstream outputFile(outputFileName, std::ios::binary);
 
-    if (inputFile.is_open() && outputFile.is_open())
+    if (inputFile.is_open())
     {
-        char readIn;
-        std::string output{};
-        long byteCounter{};
-        long bitCounter{};
-        while (inputFile.get(readIn))
+        std::ofstream outputFile(outputFileName, std::ios::binary);
+        if (outputFile.is_open())
         {
-            std::string str = codeTable[readIn];
-            byteCounter++;
-            bitCounter += str.length();
-            output += str;
-        }
-        writeCodeTable(outputFileName);
-        //calculate padding
-        long offSet = (bitCounter / 8) + (bitCounter % 8 ? 1 : 0);
-        //pad string with zero's for extra bytes
-        for (int i = bitCounter; i < offSet * 8; i++)
-        {
-            output += "0";
-        }
-        //extract cstring
-        std::cout << output << std::endl;
-        const char *cstring = output.c_str();
-        //convert to bits and write to file
-
-        for (int i = 0; i < output.length(); i += 8)
-        {
-            // unsigned char val{0};
-            unsigned char check{0};
-            for (int j = 0; j < 8; j++)
+            char readIn;
+            std::string output{};
+            long byteCounter{};
+            long bitCounter{};
+            while (inputFile.get(readIn))
             {
-                // if (cstring[i + j] == '1')
-                // {
-                //     val |= 1;
-                //     std::cout << "not shift " << std::to_string(val) << std::endl;
-                // }
-                // if (j < 7)
-                // {
-                //     val <<= 1;
-                //     std::cout << std::to_string(val) << std::endl;
-                // }
-
-                // std::cout << "char " << j << " " << std::to_string(cstring[i + j]) << std::endl;
-                check |= (((int)cstring[i + j] - 48) << (7 - j)); //minus 48 to get actual int value (1/0)
+                std::string str = codeTable[readIn];
+                byteCounter++;
+                bitCounter += str.length();
+                output += str;
             }
-            // outputFile << val;
-            outputFile << check;
+            writeCodeTable(outputFileName);
+            //calculate padding
+            long offSet = (bitCounter / 8) + (bitCounter % 8 ? 1 : 0);
+            //pad string with zero's for extra bytes
+            for (int i = bitCounter; i < offSet * 8; i++)
+            {
+                output += "0";
+            }
+            //extract cstring
+            std::cout << output << std::endl;
+            const char *cstring = output.c_str();
+            //convert to bits and write to file
+
+            for (int i = 0; i < output.length(); i += 8)
+            {
+                // unsigned char val{0};
+                unsigned char check{0};
+                for (int j = 0; j < 8; j++)
+                {
+                    // if (cstring[i + j] == '1')
+                    // {
+                    //     val |= 1;
+                    //     std::cout << "not shift " << std::to_string(val) << std::endl;
+                    // }
+                    // if (j < 7)
+                    // {
+                    //     val <<= 1;
+                    //     std::cout << std::to_string(val) << std::endl;
+                    // }
+
+                    // std::cout << "char " << j << " " << std::to_string(cstring[i + j]) << std::endl;
+                    check |= (((int)cstring[i + j] - 48) << (7 - j)); //minus 48 to get actual int value (1/0)
+                }
+                // outputFile << val;
+                outputFile << check;
+            }
+
+            //calculate compression ratio and print
+            int ratio = (byteCounter * 8) / bitCounter;
+            std::cout << "Compression ratio is roughly 1:" << ratio << std::endl;
+
+            outputFile.close();
         }
-
-        //calculate compression ratio and print
-        int ratio = (byteCounter * 8) / bitCounter;
-        std::cout << "Compression ratio is roughly 1:" << ratio << std::endl;
-
         inputFile.close();
-        outputFile.close();
     }
     else
     {
@@ -305,25 +312,31 @@ void MRREMI007::HuffmanTree::compressFileBinary(const std::string inputFileName,
 }
 
 //extract compressed data to its encoded string representation
-void MRREMI007::HuffmanTree::decompressFileBinary(const std::string inputFileName)
+void MRREMI007::HuffmanTree::decompressFileBinary(const std::string inputFileName, const std::string outputFileName)
 {
     std::FILE *input = fopen(inputFileName.c_str(), "r");
     if (input != nullptr)
     {
-        unsigned char *c = new unsigned char[1];
-        std::string encoding{};
-        while (fread(c, 1, 1, input))
+        std::ofstream output(outputFileName);
+        
+        if (output.is_open())
         {
-            for (int i = 7; i > -1; --i)
+            unsigned char *c = new unsigned char[1];
+            std::string encoding{};
+            while (fread(c, 1, 1, input))
             {
-                char check = *c >> i;
-                int val = check & 1;
-                encoding += std::to_string(val);
+                for (int i = 7; i > -1; --i)
+                {
+                    char check = *c >> i;
+                    int val = check & 1;
+                    encoding += std::to_string(val);
+                }
             }
+            delete[] c;
+            output << encoding;
+            output.close();
         }
         fclose(input);
-        delete[] c;
-        std::cout << encoding << std::endl;
     }
     else
     {

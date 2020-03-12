@@ -68,7 +68,7 @@ public:
     void compressFileBinary(const std::string inputFileName, const std::string outputFileName);
 
     //extract compressed data to its encoded string representation
-    void decompressFileBinary(const std::string inputFileName);
+    void decompressFileBinary(const std::string inputFileName, std::string outputFileName);
 };
 
 } // namespace MRREMI007
