@@ -3,6 +3,7 @@
 #include "HuffmanTree.h"
 #include "HuffmanNode.h"
 
+/*
 //check that priority queue is ordering Huffman Nodes correctly
 TEST_CASE("Testing Priority Queue", "[Priority Queue]")
 {
@@ -233,13 +234,12 @@ TEST_CASE("Testing binary decompression", "[Binary Decompression]")
     {
         MRREMI007::HuffmanTree tree;
         tree.decompressFileBinary("outputBinary", "outputDecompress");
-         std::ifstream output("outputDecompress");
+        std::ifstream output("outputDecompress");
 
         REQUIRE(output.is_open());
         std::string encoding{};
         std::getline(output, encoding);
         REQUIRE(encoding == "111010110000111101000000");
-
     }
 
     SECTION("Testing with small file")
@@ -252,5 +252,96 @@ TEST_CASE("Testing binary decompression", "[Binary Decompression]")
         std::string encoding{};
         std::getline(output, encoding);
         REQUIRE(encoding == "01100000");
+    }
+}
+*/
+
+//Test special member functions for HuffmanNode
+TEST_CASE("Testing HuffmanNode", "[HuffmanNode]")
+{
+    MRREMI007::HuffmanNode node('h', 1);
+    SECTION("Copy Constructor")
+    {
+        MRREMI007::HuffmanNode copyNode(node);
+        REQUIRE(copyNode.character == 'h');
+        REQUIRE(copyNode.occurence == 1);
+        REQUIRE(copyNode.leftNode == nullptr);
+        REQUIRE(copyNode.rightNode == nullptr);
+        copyNode.character = 'j';
+        copyNode.occurence = 2;
+        REQUIRE(node.character == 'h');
+        REQUIRE(node.occurence == 1);
+    }
+
+    SECTION("Copy assignment")
+    {
+        MRREMI007::HuffmanNode copyNode;
+        copyNode = node;
+        REQUIRE(copyNode.character == 'h');
+        REQUIRE(copyNode.occurence == 1);
+        REQUIRE(copyNode.leftNode == nullptr);
+        REQUIRE(copyNode.rightNode == nullptr);
+        copyNode.character = 'j';
+        copyNode.occurence = 2;
+        REQUIRE(node.character == 'h');
+        REQUIRE(node.occurence == 1);
+    }
+
+    SECTION("Move constructor")
+    {
+        MRREMI007::HuffmanNode copyNode(std::move(node));
+        REQUIRE(copyNode.character == 'h');
+        REQUIRE(copyNode.occurence == 1);
+        REQUIRE(copyNode.leftNode == nullptr);
+        REQUIRE(copyNode.rightNode == nullptr);
+    }
+
+    SECTION("Move assignment")
+    {
+        MRREMI007::HuffmanNode copyNode;
+        copyNode = std::move(node);
+        REQUIRE(copyNode.character == 'h');
+        REQUIRE(copyNode.occurence == 1);
+        REQUIRE(copyNode.leftNode == nullptr);
+        REQUIRE(copyNode.rightNode == nullptr);
+    }
+}
+
+//Test special member functions for HuffmanTree
+TEST_CASE("Testing HuffmanTree", "[HuffmanTree]")
+{
+    MRREMI007::HuffmanTree tree;
+    SECTION("Copy Constructor")
+    {
+        MRREMI007::HuffmanTree copyTree(tree);
+        REQUIRE(copyTree.root == nullptr);
+        REQUIRE(copyTree.codeTable.size() == 0);
+        copyTree.compressFile("test.txt", "outputBasic");
+        REQUIRE(tree.codeTable.size() == 0);
+    }
+
+    SECTION("Copy assignment")
+    {
+        MRREMI007::HuffmanTree copyTree;
+        copyTree = tree;
+        REQUIRE(copyTree.root == nullptr);
+        REQUIRE(copyTree.codeTable.size() == 0);
+        copyTree.compressFile("test.txt", "outputBasic");
+        REQUIRE(tree.codeTable.size() == 0);
+    }
+
+    SECTION("Move constructor")
+    {
+        MRREMI007::HuffmanTree copyTree(std::move(tree));
+        REQUIRE(copyTree.root == nullptr);
+        REQUIRE(copyTree.codeTable.size() == 0);
+    }
+
+    SECTION("Move assignment")
+    {
+        MRREMI007::HuffmanTree copyTree;
+        copyTree = std::move(tree);
+        REQUIRE(copyTree.root == nullptr);
+        REQUIRE(copyTree.codeTable.size() == 0);
     }
 }
