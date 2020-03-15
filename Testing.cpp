@@ -3,7 +3,7 @@
 #include "HuffmanTree.h"
 #include "HuffmanNode.h"
 
-/*
+
 //check that priority queue is ordering Huffman Nodes correctly
 TEST_CASE("Testing Priority Queue", "[Priority Queue]")
 {
@@ -254,7 +254,7 @@ TEST_CASE("Testing binary decompression", "[Binary Decompression]")
         REQUIRE(encoding == "01100000");
     }
 }
-*/
+
 
 //Test special member functions for HuffmanNode
 TEST_CASE("Testing HuffmanNode", "[HuffmanNode]")

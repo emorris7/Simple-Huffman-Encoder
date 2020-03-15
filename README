@@ -1,0 +1,24 @@
+The main class, HuffenCode, takes in command line arguments and, using huffman encoding, either writes out the string huffman encoding for an input text file
+to an output file or writes the compressed binary huffman encoding for an input text file to an output binary file. For both actions, the encodings for the 
+characters from the text file created by the huffman encoding is also written to header file with the same base name as the output file. HuffenNode is the 
+for the nodes in the huffman encoding tree and HuffmanTree is the class for the actual huffman tree which has method to encode a file using the Huffman 
+encoding method.
+
+To run main code:
+-compile using 'make' command
+-run executable created
+basic string encoding: './HuffenCode <input file> <output file>'
+binary encoding: './HuffenCode -b <input file> <output file>'
+
+To remove executables and object files:
+-use command 'make clean'
+
+Unit testing has also been provided for the code in the Testing.cpp file.
+
+To run testing:
+-compile using 'make Testing'
+-run exectuable created using './Testing'
+NOTE: testing requires the existance of the provided test.txt and testSmall.txt provided
+
+To remove testing exectuables and object files:
+-use command 'make clean_test'

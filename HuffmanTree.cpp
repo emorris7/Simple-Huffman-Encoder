@@ -211,13 +211,6 @@ void MRREMI007::HuffmanTree::compressFile(const std::string inputFileName, const
                 output += str;
             }
             writeCodeTable(outputFileName);
-            // //calculate padding
-            // long offSet = (bitCounter / 8) + (bitCounter % 8 ? 1 : 0);
-            // //pad string with zero's for extra bytes
-            // for (int i = bitCounter; i < offSet * 8; i++)
-            // {
-            //     output += "0";
-            // }
             outputFile << output;
 
             //calculate compression ratio and print
@@ -269,31 +262,16 @@ void MRREMI007::HuffmanTree::compressFileBinary(const std::string inputFileName,
                 output += "0";
             }
             //extract cstring
-            std::cout << output << std::endl;
             const char *cstring = output.c_str();
             //convert to bits and write to file
 
             for (int i = 0; i < output.length(); i += 8)
             {
-                // unsigned char val{0};
                 unsigned char check{0};
                 for (int j = 0; j < 8; j++)
                 {
-                    // if (cstring[i + j] == '1')
-                    // {
-                    //     val |= 1;
-                    //     std::cout << "not shift " << std::to_string(val) << std::endl;
-                    // }
-                    // if (j < 7)
-                    // {
-                    //     val <<= 1;
-                    //     std::cout << std::to_string(val) << std::endl;
-                    // }
-
-                    // std::cout << "char " << j << " " << std::to_string(cstring[i + j]) << std::endl;
                     check |= (((int)cstring[i + j] - 48) << (7 - j)); //minus 48 to get actual int value (1/0)
                 }
-                // outputFile << val;
                 outputFile << check;
             }
 
@@ -318,7 +296,7 @@ void MRREMI007::HuffmanTree::decompressFileBinary(const std::string inputFileNam
     if (input != nullptr)
     {
         std::ofstream output(outputFileName);
-        
+
         if (output.is_open())
         {
             unsigned char *c = new unsigned char[1];
