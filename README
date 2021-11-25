@@ -1,7 +1,4 @@
-The main class, HuffenCode, takes in command line arguments and, using huffman encoding, either writes out the string huffman encoding for an input text file
-to an output file or writes the compressed binary huffman encoding for an input text file to an output binary file. For both actions, the encodings for the 
-characters from the text file created by the huffman encoding is also written to header file with the same base name as the output file. HuffenNode is the 
-for the nodes in the huffman encoding tree and HuffmanTree is the class for the actual huffman tree which has method to encode a file using the Huffman 
+This projects implements a simple implementation of a Huffman encoder for compressing files. The main class, HuffenCode, takes in command line arguments and, using huffman encoding, either writes out the string huffman encoding for an input text file to an output file or writes the compressed binary huffman encoding for an input text file to an output binary file. For both actions, the encodings for the  characters from the text file created by the huffman encoding is also written to header file with the same base name as the output file. HuffenNode is the class for the nodes in the huffman encoding tree and HuffmanTree is the class for the actual huffman tree which has method to encode a file using the Huffman 
 encoding method.
 
 To run main code:
